@@ -5,18 +5,6 @@ from view import View
 flag = False
 
 
-# 计算表达式
-def calculate(expression):
-    try:
-        result = eval(expression)
-        global flag
-        flag = True
-        return str(result)
-    except SyntaxError:
-        flag = True
-        return '错误'
-
-
 class Main:
     def __init__(self):
         self.view = View()
@@ -45,8 +33,20 @@ class Main:
         self.view.btn_negate.bind('<Button-1>', lambda e: self.input('--'))
         self.view.btn_clear.bind('<Button-1>', self.clear)
         self.view.btn_equal.bind('<Button-1>', lambda e: self.view.show.configure(
-            text=calculate(self.view.show.cget('text'))
+            text=self.calculate(self.view.show_exp.cget('text'))
         ))
+
+    # 计算表达式
+    def calculate(self, expression):
+        self.view.show_exp.configure(text=expression+'=')
+        try:
+            result = eval(expression)
+            global flag
+            flag = True
+            return str(result)
+        except (SyntaxError, NameError):
+            flag = True
+            return '错误'
 
     # 显示、处理输入（按钮点击）
     def input(self, value):
@@ -57,7 +57,7 @@ class Main:
             flag = False
 
         operate = ['+', '-', '*', '/']
-        text = self.view.show.cget('text')
+        text = self.view.show_exp.cget('text')
         # 正/负数转换
         if value == '--':
             value = ''
@@ -81,20 +81,49 @@ class Main:
             # 将数据恢复原来的顺序
             text = text[::-1]
 
+        # 防止一个数输入多个小数点、运算符后跟小数点
+        try:
+            if value == '.':
+                # 末尾已经是小数点
+                if text[-1] == '.':
+                    value = ''
+                # 反转方便取得最后一个操作数
+                text = text[::-1]
+                idx = []
+                # 取得反转后的运算符索引
+                for op in operate:
+                    i = text.find(op)
+                    if i != -1:
+                        idx.append(i)
+                # 取得最前面的运算符
+                try:
+                    index = min(idx)
+                except ValueError:
+                    # 第一个操作数已经包含小数点
+                    index = 0
+                    if '.' in text:
+                        value = ''
+                # 最后输入的操作数已经包含小数点
+                if '.' in text[:index]:
+                    value = ''
+                # 转回原顺序
+                text = text[::-1]
+        except IndexError:
+            pass
+
         # 运算符更改  最后一个是运算符且输入的也是运算符，则更改运算符
         try:
             if text[-1] in operate and value in operate:
                 text = text[:-1]
         except IndexError:
             pass
-        # 防止小数点重复  末尾是小数点且输入还是小数点
-        if value == '.' and text[-1] == '.':
-            value = ''
+
         # 更新数据显示
         val = text + value
-        self.view.show.configure(text=val)
+        self.view.show_exp.configure(text=val)
 
     def clear(self, event):
+        self.view.show_exp.configure(text='')
         self.view.show.configure(text='')
 
     def start(self):

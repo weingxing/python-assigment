@@ -7,7 +7,7 @@ class View:
         self.window = tk.Tk()
         self.window.title('计算器')
         # 大小 840x540，窗口移动到 距屏幕左侧350，上侧150 的位置
-        self.window.geometry('599x295+350+150')
+        self.window.geometry('599x355+350+150')
         # 按钮宽度，统一设置，便于修改
         self.btn_width = 10
         # 按钮字体大小
@@ -17,6 +17,8 @@ class View:
         self.display = tk.Frame(self.frame)
         self.buttons = tk.Frame(self.frame)
         # 显示区域
+        self.show_exp = tk.Label(self.display, font=self.btn_font,
+                                 background='#FCFCFC', width=42, height=2)
         self.show = tk.Label(self.display, font=self.btn_font,
                              background='#FCFCFC', width=42, height=2)
         # 按钮 0-9
@@ -68,7 +70,8 @@ class View:
         self.display.grid(row=0, column=0)
         self.buttons.grid(row=1, column=0)
         # 放置显示区域
-        self.show.grid(row=0, column=0)
+        self.show_exp.grid(row=0, column=0)
+        self.show.grid(row=1, column=0)
         # 放置 C、（、）、/
         self.btn_clear.grid(row=0, column=0)
         self.btn_left.grid(row=0, column=1)
