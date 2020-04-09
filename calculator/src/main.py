@@ -55,10 +55,10 @@ class Main:
         if flag:
             self.clear('')
             flag = False
-
         operate = ['+', '-', '*', '/']
         text = self.view.show_exp.cget('text')
         # 正/负数转换
+        tmp = True
         if value == '--':
             value = ''
             # 反转原来的数据
@@ -70,17 +70,24 @@ class Main:
                 if i != -1:
                     idx.append(i)
             # 取得最前面的运算符
-            index = min(idx)
-
-            if text[index] == '-' and text[index + 1] in operate:
-                # 当前数是负数，变为正数，删除负号即可
-                text = text[:index] + text[index + 1:]
-            else:
-                # 当前数不是负数，变为负数，插入负号即可
-                text = text[:index] + '-' + text[index:]
+            try:
+                index = min(idx)
+            except ValueError:
+                tmp = False
+                index = len(text)
+                # text = text + '-'
+            try:
+                if tmp and text[index] == '-' and text[index + 1] in operate:
+                    # 当前数是负数，变为正数，删除负号即可
+                    text = text[:index] + text[index + 1:]
+                else:
+                    # 当前数不是负数，变为负数，插入负号即可
+                    text = text[:index] + '-' + text[index:]
+            except IndexError:
+                # 当前仅有一个数字，没有运算符
+                text = text[:index]
             # 将数据恢复原来的顺序
             text = text[::-1]
-
         # 防止一个数输入多个小数点、运算符后跟小数点
         try:
             if value == '.':
@@ -110,18 +117,17 @@ class Main:
                 text = text[::-1]
         except IndexError:
             pass
-
         # 运算符更改  最后一个是运算符且输入的也是运算符，则更改运算符
         try:
             if text[-1] in operate and value in operate:
                 text = text[:-1]
         except IndexError:
             pass
-
         # 更新数据显示
         val = text + value
         self.view.show_exp.configure(text=val)
 
+    # 清除
     def clear(self, event):
         self.view.show_exp.configure(text='')
         self.view.show.configure(text='')
