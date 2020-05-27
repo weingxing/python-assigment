@@ -1,17 +1,23 @@
 # student-assigment
-Python课程作业，其中一个是基于tkinter和MySQL实现的学生管理系统，因为只是一个日常作业，所以没有花费太多时间，仅实现了基本的增删改查功能。另一个是使用Tkinter实现的简单计算器，可以处理带括号的长算式。
+Python课程作业，win32软件
+
+其中一个是基于tkinter和MySQL实现的学生管理系统，因为只是一个日常作业，所以没有花费太多时间仅实现了基本的增删改查功能。
+
+另一个是使用Tkinter实现的简单计算器，可以处理带括号的长算式。
+
+还有一个是使用PyQT5开发的文件加密软件。
 
 [学神信息管理](./student)
 
 [计算器](./calculator)
+
+[文件加密](./file_encryption)
 
 ## 开发环境
 
 PyCharm
 
 python == 3.7
-
-PyMySQL  ==  0.9.3
 
 打包工具： PyInstaller == 3.6
 
@@ -43,7 +49,11 @@ pyinstaller -F -w login.py -p database.py -p gui.py -p view.py
 pyinstaller -F -w main.py -p view.py
 ```
 
+---
 
+### 文件加密
+
+见[文件加密](./file_encryption)的word文件
 
 ## 运行截图
 
@@ -68,3 +78,7 @@ pyinstaller -F -w main.py -p view.py
 ![](./calculator/ScreenShot/4.png)
 
 ![](./calculator/ScreenShot/5.png)
+
+### 文件加密
+
+见[文件加密](./file_encryption)中的word文件
